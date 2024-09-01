@@ -3,14 +3,12 @@
 This project demonstrates a Computer Vision application built using Streamlit and OpenCV. The application allows users to upload images, apply various Image Processing techniques and visualize the results.
 
 ## Table of Contents
-- [Computer Vision Application with Streamlit and OpenCV](#computer-vision-application-with-streamlit-and-opencv)
-  - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Installation](#installation)
   - [Usage](#usage)
   - [GUI](#gui)
   - [Contributing](#contributing)
-
+   
 ## Description
 
 This application includes functionalities for:
