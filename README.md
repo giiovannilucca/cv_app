@@ -3,11 +3,13 @@
 This project demonstrates a Computer Vision application built using Streamlit and OpenCV. The application allows users to upload images, apply various Image Processing techniques and visualize the results.
 
 ## Table of Contents
-1. [Description](#description)
-2. [Installation](#installation)
-3. [Usage](#usage)
-4. [GUI] (#gui)
-5. [Contributing](#contributing)
+- [Computer Vision Application with Streamlit and OpenCV](#computer-vision-application-with-streamlit-and-opencv)
+  - [Table of Contents](#table-of-contents)
+  - [Description](#description)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [GUI](#gui)
+  - [Contributing](#contributing)
 
 ## Description
 
@@ -24,7 +26,7 @@ The user can interact with the application through a sidebar interface in Stream
 To run this application, you need to have Python and the required libraries installed. You can install the dependencies using pip:
 
 ```bash
-pip install streamlit opencv-python-headless numpy
+pip install streamlit opencv-python numpy
 ```
 
 ## Usage
@@ -35,7 +37,7 @@ To run the application, use the following command:
 streamlit run src/app.py
 ```
 
-## GUI (Graphical User Interface)
+## GUI
 
 The application provides an intuitive and interactive graphical user interface (GUI) built with Streamlit. The main components of the GUI are designed to facilitate Image Processing tasks and offer a seamless user experience.
 
