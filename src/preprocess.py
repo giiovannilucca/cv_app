@@ -98,3 +98,54 @@ def rotate_image(image, angle, center=None, scale=1.0):
     M = cv2.getRotationMatrix2D(center, angle, scale)
     rotated_image = cv2.warpAffine(image, M, (cols, rows))
     return rotated_image
+
+def histogram_equalization_gray(image):
+    """
+    Apply histogram equalization to a grayscale image.
+    
+    Parameters:
+    - image: input grayscale image (numpy array)
+    
+    Returns:
+    - equalized_image: image after histogram equalization (numpy array)
+    """
+    equalized_image = cv2.equalizeHist(image)
+    return equalized_image
+
+def histogram_equalization_color(image):
+    """
+    Apply histogram equalization to a color image.
+    
+    Parameters:
+    - image: input color image (numpy array)
+    
+    Returns:
+    - equalized_image: color image after histogram equalization (numpy array)
+    """
+    ycrcb_img = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
+    ycrcb_img[:, :, 0] = cv2.equalizeHist(ycrcb_img[:, :, 0])
+    equalized_image = cv2.cvtColor(ycrcb_img, cv2.COLOR_YCrCb2BGR)
+    return equalized_image
+
+def apply_filter(image, filter_type, kernel_size):
+    """
+    Apply the specified filter to the input image using the given kernel size.
+    
+    Parameters:
+    - image: input image (numpy array)
+    - filter_type: type of filter to apply (string)
+    - kernel_size: size of the kernel (integer)
+    
+    Returns:
+    - filtered_image: filtered image (numpy array)
+    """
+    if filter_type == 'Mean':
+        return cv2.blur(image, (kernel_size, kernel_size))
+    elif filter_type == 'Median':
+        return cv2.medianBlur(image, kernel_size)
+    elif filter_type == 'Gaussian':
+        return cv2.GaussianBlur(image, (kernel_size, kernel_size), 0)
+    elif filter_type == 'Bilateral':
+        return cv2.bilateralFilter(image, kernel_size, 75, 75)
+    else:
+        raise ValueError("Unsupported filter type")

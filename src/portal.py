@@ -2,7 +2,7 @@ import streamlit as st
 import numpy as np
 import cv2
 
-from utils import load_image
+from utils import *
 from preprocess import * 
 
 # Title of the application
@@ -41,6 +41,26 @@ scale_button = st.sidebar.button("Apply Scaling")
 angle = st.sidebar.slider("Rotation Angle (degrees)", min_value=-180, max_value=180, value=0)
 rotation_button = st.sidebar.button("Apply Rotation")
 
+st.sidebar.title('Enhancement')
+# Dropdown for enhancement techniques
+enhancement_method = st.sidebar.selectbox(
+    "Select Enhancement Method",
+    ["Histogram Equalization (Grayscale)", "Histogram Equalization (Color)"]
+)
+
+# Button to apply enhancement
+enhance_button = st.sidebar.button("Apply Enhancement")
+
+st.sidebar.title('Filters')
+# Slider for kernel size
+kernel_size = st.sidebar.slider("Kernel Size", min_value=3, max_value=21, value=5, step=2)
+
+# Dropdown for filter selection
+filter_type = st.sidebar.selectbox("Select Filter", ["Mean", "Median", "Gaussian", "Bilateral"])
+
+# Button to apply filter
+filter_button = st.sidebar.button("Apply Filter")
+
 # Load the template image
 template_image = cv2.imread("data/examples/blank_image.jpg")
 
@@ -59,15 +79,18 @@ image = None
 quantized_image = None
 converted_image = None
 transformed_image = None
+enhanced_image = None
+filtered_image = None
 
 # Check if a file is uploaded
 if uploaded_file is not None:
     # Convert the uploaded image to an OpenCV image
     image = load_image(uploaded_file)
+    image_type = detect_image_type(image)
 
     with col1:
         # Display the uploaded image in the In column
-        st.image(image, channels="BGR", caption='Original Image', use_column_width=True)
+        st.image(image, channels="BGR" if image_type == 'color' else 'GRAY', caption='Original Image', use_column_width=True)
 
     if quantized_button and image is not None:
         # Apply uniform quantization when the button is clicked
@@ -78,17 +101,30 @@ if uploaded_file is not None:
         # Convert the image to the selected color space
         converted_image = convert_color(image, color_space)
 
-    # Apply translation
     if translate_button and image is not None:
         transformed_image = translate_image(image, tx, ty)
     
-    # Apply scaling
     if scale_button and image is not None:
         transformed_image = scale_image(image, scale_x, scale_y)
     
-    # Apply rotation
     if rotation_button and image is not None:
         transformed_image = rotate_image(image, angle)
+
+    if enhance_button and image is not None:
+        if enhancement_method == "Histogram Equalization (Grayscale)":
+            if len(image.shape) == 2:  # Grayscale check
+                enhanced_image = histogram_equalization_gray(image)
+            else:
+                st.warning("Please upload a grayscale image for this enhancement.")
+        elif enhancement_method == "Histogram Equalization (Color)":
+            if len(image.shape) == 3:  # Color image check
+                enhanced_image = histogram_equalization_color(image)
+            else:
+                st.warning("Please upload a color image for this enhancement.")        
+
+    if filter_button and image is not None:
+        # Apply the selected filter
+        filtered_image = apply_filter(image, filter_type, kernel_size)
 
     # Display the processed image in the Output column
     with col2:
@@ -98,6 +134,10 @@ if uploaded_file is not None:
             st.image(quantized_image, caption=f'Quantized Image ({bits} bits)', use_column_width=True)
         elif transformed_image is not None:
             st.image(transformed_image, channels="BGR" if transformed_image.ndim == 3 else "GRAY", caption='Transformed Image', use_column_width=True)
+        elif enhanced_image is not None:
+            st.image(enhanced_image, channels="BGR" if image_type == 'color' else 'GRAY', caption=f'Enhanced Image ({enhancement_method})', use_column_width=True)
+        elif filtered_image is not None:
+            st.image(filtered_image, channels="BGR" if image_type == 'color' else 'GRAY', caption=f'{filter_type} Filter Applied (Kernel Size: {kernel_size})', use_column_width=True)
         else:
             st.image(template_image, caption='Template Image', use_column_width=True)
 else:
