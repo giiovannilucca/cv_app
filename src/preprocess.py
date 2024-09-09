@@ -1,5 +1,5 @@
-import numpy as np
 import cv2
+import numpy as np
 
 def uniform_quantization(image, bits):
     """
@@ -12,13 +12,8 @@ def uniform_quantization(image, bits):
     Returns:
     - quantized_image: quantized image (numpy array)
     """
-    # Calculate the number of levels for quantization
-    levels = 2 ** bits
-    
-    # Calculate the quantization step size
-    step_size = 256 // levels
-    
-    # Apply quantization
+    levels = 2 ** bits    
+    step_size = 256 // levels    
     quantized_image = (image // step_size) * step_size + step_size // 2
     
     return quantized_image

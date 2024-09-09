@@ -35,3 +35,20 @@ def detect_image_type(image):
         return 'grayscale'
     else:
         raise ValueError("Unsupported image format.")
+    
+def is_color_image(image):
+    """
+    Check if the input image is in color (RGB) or grayscale.
+
+    Parameters:
+    - image: input image (numpy array)
+
+    Returns:
+    - is_color: True if the image is color (RGB), False if grayscale
+    """
+    if len(image.shape) == 3 and image.shape[2] == 3:
+        return True
+    elif len(image.shape) == 2:
+        return False
+    else:        
+        raise ValueError("Unsupported image format")
